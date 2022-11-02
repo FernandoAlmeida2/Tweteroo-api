@@ -53,33 +53,41 @@ app.post("/tweets", function (req, res) {
 
 app.get("/tweets", (req, res) => {
   const lastTenTweets = [];
-  for (let i = 1; i <= 10; i++) {
-    if (tweets.length - i < 0) {
-      break;
+  const page = Number(req.query.page);
+  const tweetsRange = (page - 1) * 10;
+  if (page <= 0) {
+    res.status(400).send("Informe uma página válida!");
+  } else {
+    for (let i = 1; i <= 10; i++) {
+      const tweetIndex = tweets.length - (i + tweetsRange);
+      if (tweetIndex < 0) {
+        break;
+      }
+      lastTenTweets.push({
+        username: tweets[tweetIndex].username,
+        avatar: users.filter(
+          (u) => u.username === tweets[tweetIndex].username
+        )[0].avatar,
+        tweet: tweets[tweetIndex].tweet,
+      });
     }
-    lastTenTweets.push({
-      username: tweets[tweets.length - i].username,
-      avatar: users.filter(
-        (u) => u.username === tweets[tweets.length - i].username
-      )[0].avatar,
-      tweet: tweets[tweets.length - i].tweet,
-    });
+    res.send(lastTenTweets);
   }
-  res.send(lastTenTweets);
 });
 
 app.get("/tweets/:USERNAME", (req, res) => {
   const username = req.params.USERNAME;
   const avatar = users.filter((u) => u.username === username)[0].avatar;
   const allTweetsUser = [];
-  tweets.filter((t) => t.username === username);
-  tweets.forEach((t) => {
-    allTweetsUser.push({
-      username: t.username,
-      avatar,
-      tweet: t.tweet,
+  tweets
+    .filter((t) => t.username === username)
+    .forEach((t) => {
+      allTweetsUser.push({
+        username: t.username,
+        avatar,
+        tweet: t.tweet,
+      });
     });
-  });
   res.send(allTweetsUser);
 });
 
