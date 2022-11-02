@@ -32,27 +32,25 @@ app.use(express.urlencoded({ extended: true }));
 app.post("/sign-up", function (req, res) {
   const username = req.body.username;
   const avatar = req.body.avatar;
-  if(avatar.length === 0 || username.length === 0){
+  if (avatar.length === 0 || username.length === 0) {
     res.status(400).send("Todos os campos são obrigatórios!");
   } else {
     users.push({ username, avatar });
-    console.log(users)
+    console.log(users);
     res.status(201).send("OK");
   }
-  
 });
 
-
 app.post("/tweets", function (req, res) {
-    const username = req.body.username;
-    const tweet = req.body.tweet;
-    if(tweet.length === 0 || username.length === 0){
-        res.status(400).send("Todos os campos são obrigatórios!");
-      } else {
-        tweets.push({ username, tweet });
-        res.status(201).send("OK");
-      }
-  });
+  const username = req.body.username;
+  const tweet = req.body.tweet;
+  if (tweet.length === 0 || username.length === 0) {
+    res.status(400).send("Todos os campos são obrigatórios!");
+  } else {
+    tweets.push({ username, tweet });
+    res.status(201).send("OK");
+  }
+});
 
 app.get("/tweets", (req, res) => {
   const lastTenTweets = [];
@@ -69,6 +67,21 @@ app.get("/tweets", (req, res) => {
     });
   }
   res.send(lastTenTweets);
+});
+
+app.get("/tweets/:USERNAME", (req, res) => {
+  const username = req.params.USERNAME;
+  const avatar = users.filter((u) => u.username === username)[0].avatar;
+  const allTweetsUser = [];
+  tweets.filter((t) => t.username === username);
+  tweets.forEach((t) => {
+    allTweetsUser.push({
+      username: t.username,
+      avatar,
+      tweet: t.tweet,
+    });
+  });
+  res.send(allTweetsUser);
 });
 
 app.listen(5000);
