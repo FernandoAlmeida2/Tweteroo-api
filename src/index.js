@@ -32,16 +32,26 @@ app.use(express.urlencoded({ extended: true }));
 app.post("/sign-up", function (req, res) {
   const username = req.body.username;
   const avatar = req.body.avatar;
-  users.push({ username, avatar });
-  res.send("OK");
+  if(avatar.length === 0 || username.length === 0){
+    res.status(400).send("Todos os campos são obrigatórios!");
+  } else {
+    users.push({ username, avatar });
+    console.log(users)
+    res.status(201).send("OK");
+  }
+  
 });
 
 
 app.post("/tweets", function (req, res) {
     const username = req.body.username;
     const tweet = req.body.tweet;
-    tweets.push({ username, tweet });
-    res.send("OK");
+    if(tweet.length === 0 || username.length === 0){
+        res.status(400).send("Todos os campos são obrigatórios!");
+      } else {
+        tweets.push({ username, tweet });
+        res.status(201).send("OK");
+      }
   });
 
 app.get("/tweets", (req, res) => {
@@ -50,7 +60,7 @@ app.get("/tweets", (req, res) => {
     if (tweets.length - i < 0) {
       break;
     }
-    lastTenTweets.unshift({
+    lastTenTweets.push({
       username: tweets[tweets.length - i].username,
       avatar: users.filter(
         (u) => u.username === tweets[tweets.length - i].username
