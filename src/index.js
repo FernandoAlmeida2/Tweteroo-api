@@ -1,4 +1,4 @@
-import express, { application } from "express";
+import express from "express";
 import cors from "cors";
 
 const app = express();
@@ -26,20 +26,16 @@ const tweets = [
 
 app.use(cors());
 
-/* app.use(express.json());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/api/users', function(req, res) {
-    const user_id = req.body.id;
-    const token = req.body.token;
-    const geo = req.body.geo;
-  
-    res.send({
-      'user_id': user_id,
-      'token': token,
-      'geo': geo
-    });
-  }); */
+app.post("/sign-up", function (req, res) {
+  const username = req.body.username;
+  const avatar = req.body.avatar;
+  users.push({ username, avatar });
+  console.log(users);
+  res.send("OK");
+});
 
 app.get("/tweets", (req, res) => {
   const lastTenTweets = [];
