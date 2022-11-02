@@ -33,9 +33,16 @@ app.post("/sign-up", function (req, res) {
   const username = req.body.username;
   const avatar = req.body.avatar;
   users.push({ username, avatar });
-  console.log(users);
   res.send("OK");
 });
+
+
+app.post("/tweets", function (req, res) {
+    const username = req.body.username;
+    const tweet = req.body.tweet;
+    tweets.push({ username, tweet });
+    res.send("OK");
+  });
 
 app.get("/tweets", (req, res) => {
   const lastTenTweets = [];
