@@ -36,13 +36,12 @@ app.post("/sign-up", function (req, res) {
     res.status(400).send("Todos os campos são obrigatórios!");
   } else {
     users.push({ username, avatar });
-    console.log(users);
     res.status(201).send("OK");
   }
 });
 
 app.post("/tweets", function (req, res) {
-  const username = req.body.username;
+  const username = req.headers.user;
   const tweet = req.body.tweet;
   if (tweet.length === 0 || username.length === 0) {
     res.status(400).send("Todos os campos são obrigatórios!");
